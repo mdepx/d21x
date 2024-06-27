@@ -46,8 +46,12 @@ int
 main(void)
 {
 
-	while (1)
-		mdx_usleep(10000);
+	printf("mdepx started\n");
+
+	while (1) {
+		printf(".");
+		mdx_usleep(1000000);
+	}
 
 	return (0);
 }

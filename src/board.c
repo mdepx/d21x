@@ -36,6 +36,8 @@
 #include <machine/cpuregs.h>
 #include <machine/cpufunc.h>
 
+#include <machine/clint.h>
+
 #include <arch/riscv/artinchip/d21x.h>
 
 #include <dev/uart/uart_16550.h>
@@ -51,13 +53,21 @@ static struct mdx_device gpio_dev = { .sc = &gpio_sc };
 static struct d21x_cmu_softc cmu_sc;
 static struct mdx_device cmu_dev = { .sc = &cmu_sc };
 
+static struct d21x_cmu_softc gtc_sc;
+static struct mdx_device gtc_dev = { .sc = &gtc_sc };
+
+static struct clint_softc clint_sc;
+
 void
 board_init(void)
 {
 
+	malloc_init();
+	malloc_add_region((void *)0x42000000, 0x100000);
+
 	d21x_cmu_init(&cmu_dev, BASE_CMU);
 	d21x_cmu_clk_enable(&cmu_dev, D21X_CLK_GPIO, 0);
-	d21x_cmu_clk_enable(&cmu_dev, D21X_CLK_GTC, 20);
+	d21x_cmu_clk_enable(&cmu_dev, D21X_CLK_GTC, 10);
 	d21x_cmu_clk_enable(&cmu_dev, D21X_CLK_UART2, 25);
 
 	d21x_gpio_init(&gpio_dev, BASE_GPIO);
@@ -70,12 +80,18 @@ board_init(void)
 	mdx_gpio_set(&gpio_dev, GRP_PD, 10, 1);
 	mdx_gpio_set(&gpio_dev, GRP_PD, 11, 1);
 
+	d21x_gtc_init(&gtc_dev, BASE_GTC);
+
 	uart_16550_init(&uart_dev, (void *)BASE_UART2, 2, 48000000);
 	mdx_uart_setup(&uart_dev, 115200, UART_DATABITS_8, UART_STOPBITS_1,
 	    UART_PARITY_NONE);
 
 	mdx_console_register_uart(&uart_dev);
 
-	while (1)
-		printf("test %p\n", uart_dev.ops);
+	uint64_t addr;
+	addr  = 0x20000000;
+	addr += 0x04000000;
+
+	clint_sc.base = (void *)addr;
+	clint_timer_init(&clint_sc, 4000000);
 }
