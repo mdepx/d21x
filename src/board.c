@@ -30,11 +30,6 @@
 #include <sys/thread.h>
 #include <sys/spinlock.h>
 #include <sys/malloc.h>
-#include <sys/mutex.h>
-#include <sys/sem.h>
-#include <sys/list.h>
-#include <sys/smp.h>
-#include <sys/of.h>
 #include <dev/gpio/gpio.h>
 
 #include <machine/vmparam.h>
@@ -50,19 +45,11 @@
 static struct uart_16550_softc uart_sc;
 static struct mdx_device uart_dev = { .sc = &uart_sc };
 
-#if 1
 static struct d21x_gpio_softc gpio_sc;
 static struct mdx_device gpio_dev = { .sc = &gpio_sc };
-#endif
 
 static struct d21x_cmu_softc cmu_sc;
 static struct mdx_device cmu_dev = { .sc = &cmu_sc };
-
-#define PIN_CFG(g, p)   (0x80 + (g) * 0x100 + (p) * 0x4)
-#define OUT_CFG(g)      (0x04 + (g) * 0x100)
-#define OUT_SET(g)      (0x14 + (g) * 0x100)
-
-void (*test)(void);
 
 void
 board_init(void)
@@ -73,31 +60,6 @@ board_init(void)
 	d21x_cmu_clk_enable(&cmu_dev, D21X_CLK_GTC, 20);
 	d21x_cmu_clk_enable(&cmu_dev, D21X_CLK_UART2, 25);
 
-#if 0
-	uint64_t addr;
-	uint32_t reg;
-
-        addr = BASE_GPIO + PIN_CFG(3, 8);
-        reg = 5 | (3 << 4);
-        *(uint32_t *)addr = reg;
-
-        addr = BASE_GPIO + PIN_CFG(3, 9);
-        reg = 5 | (3 << 4);
-        *(uint32_t *)addr = reg;
-
-        addr = BASE_GPIO + PIN_CFG(3, 10);
-        reg = *(uint32_t *)addr;
-        reg = 1 | (3 << 4) | 1 << 17;
-        *(uint32_t *)addr = reg;
-
-        /* D.10 is out */
-        addr = BASE_GPIO + OUT_CFG(3);
-        *(uint32_t *)addr = (1 << 10);
-
-        /* D.10 out set */
-        addr = BASE_GPIO + OUT_SET(3);
-        *(uint32_t *)addr = (1 << 10);
-#else
 	d21x_gpio_init(&gpio_dev, BASE_GPIO);
 	mdx_gpio_set_function(&gpio_dev, GRP_PD, 8, PIN_PD8_UART2_TX);
 	mdx_gpio_set_function(&gpio_dev, GRP_PD, 9, PIN_PD9_UART2_RX);
@@ -107,17 +69,13 @@ board_init(void)
 	mdx_gpio_configure(&gpio_dev, GRP_PD, 11, MDX_GPIO_OUTPUT);
 	mdx_gpio_set(&gpio_dev, GRP_PD, 10, 1);
 	mdx_gpio_set(&gpio_dev, GRP_PD, 11, 1);
-#endif
 
 	uart_16550_init(&uart_dev, (void *)BASE_UART2, 2, 48000000);
-	uart_16550_setup(&uart_dev, 115200, UART_DATABITS_8, UART_STOPBITS_1,
+	mdx_uart_setup(&uart_dev, 115200, UART_DATABITS_8, UART_STOPBITS_1,
 	    UART_PARITY_NONE);
 
 	mdx_console_register_uart(&uart_dev);
 
-	while (1) {
+	while (1)
 		printf("test %p\n", uart_dev.ops);
-		//*(uint32_t *)BASE_UART2 = 0x61;
-		//mdx_uart_putc(&uart_dev, 0x61);
-	}
 }
