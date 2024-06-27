@@ -24,6 +24,7 @@ all:
 	@${BUILD_CMD} -j mdepx.conf
 	${CROSS_COMPILE}objcopy -O binary ${OBJDIR}/${APP}.elf	\
 	    ${OBJDIR}/${APP}.bin
+	${PYTHON} ./aic/mk_image.py --config aic/d21x_aic.json -s --verbose
 
 clean:
 	@rm -rf obj/*
