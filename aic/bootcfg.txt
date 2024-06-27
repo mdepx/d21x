@@ -1,0 +1,17 @@
+# Boot configuration file
+# Used in SD Card FAT32 boot and USB Disk upgrade.
+# Format:
+# protection=part1 name,part2 name,part3 name
+#   Protects partitions from being overwritten when they are upgraded.
+# boot0=size@offset
+#   boot0 size and location offset in 'image' file, boot rom read it.
+# boot0=example.bin
+#   boot0 image is file example.bin, boot rom read it.
+# boot1=size@offset
+#   boot1 size and location offset in 'image' file, boot0 read it.
+# boot1=example.bin
+#   boot1 image is file example.bin, boot0 read it.
+# image=example.img
+#   Packed image file is example.img, boot1 use it.
+
+boot0=d21x.aic
