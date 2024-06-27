@@ -1,0 +1,18 @@
+{
+    "temporary": {
+        "aicboot": {
+            "obj/d21x.aic": {
+                "head_ver": "0x00010001",
+                "loader": {
+                    "file": "obj/d21x.bin",
+                    "load address": "0x40000000",
+                     "entry point": "0x40001000",
+                },
+                "resource": {
+                    "private": "aic/ddr_init.bin",
+                    "pbp": "aic/d21x.pbp",
+                },
+            },
+        },
+    },
+}
