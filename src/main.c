@@ -42,11 +42,15 @@
 
 #include "board.h"
 
+#include <app/callout_test/callout_test.h>
+
 int
 main(void)
 {
 
 	printf("mdepx started\n");
+
+	callout_test();
 
 	while (1) {
 		printf(".");
