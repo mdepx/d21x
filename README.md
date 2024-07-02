@@ -19,7 +19,7 @@ Use T-Head compiler that supports (non-standard) instruction set extensions
     $ cd d21x
     $ make clean all
 
-### sdcard ###
+### SD-Card ###
 
 Create a single-partition fat32 image and copy files to it
 
