@@ -6,7 +6,7 @@ The board is built around 88-pin D21x CPU with 64mb of DRAM included.
 
 The board is capabile to run FreeBSD, but no support yet available.
 
-This is a 'hello world' app using MDEPX real-time operating system.
+This is a 'hello world' app using MDEPX real-time operating system. The app initializes DDR controller using proprietary blob (see aic directory).
 
 ### Setup your compiler
 
