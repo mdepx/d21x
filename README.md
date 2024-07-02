@@ -27,3 +27,5 @@ Create a single-partition fat32 image and copy files to it
     $ mount /dev/sdb /mnt
     $ cp obj/d21x.aic aic/bootcfg.txt /mnt/
     $ umount /mnt
+
+https://raw.githubusercontent.com/mdepx/d21x/main/videos/d21x.mp4
