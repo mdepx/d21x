@@ -21,12 +21,9 @@ Use T-Head compiler that supports (non-standard) instruction set extensions
 
 ### sdcard ###
 
- 1. Create a single-partition fat32 image
+Create a single-partition fat32 image and copy files to it
 
     $ mkfs.vfat /dev/sdb
-
- 1. Copy obj/d21x.aic and aic/bootcfg.txt to that partition
-
     $ mount /dev/sdb /mnt
     $ cp obj/d21x.aic aic/bootcfg.txt /mnt/
     $ umount /mnt
